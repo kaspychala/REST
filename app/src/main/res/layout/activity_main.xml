@@ -1,48 +1,62 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/activity_main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:paddingBottom="@dimen/activity_vertical_margin"
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="com.example.kasperspychaa.rest.MainActivity">
 
-
-    <TextView
-        android:id="@+id/content_label"
-        android:text="COMMAND IS"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="25dp"
-        android:layout_alignParentLeft="true" />
-
-
-    <TextView
-        android:id="@+id/content_value"
-        android:text="COMMAND"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignTop="@+id/content_label"
-        android:layout_marginLeft="100dp"/>
-
-    <Button
-        android:text="Button"
+    <android.support.design.widget.FloatingActionButton
+        android:src="@drawable/icn_microphone"
+        android:id="@+id/mic"
+        app:fabSize="normal"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginBottom="174dp"
-        android:id="@+id/button" />
+        android:layout_alignParentEnd="true"
+        android:layout_marginBottom="15dp"/>
 
-    <EditText
+    <android.support.design.widget.FloatingActionButton
+        android:src="@drawable/icn_done"
+        android:id="@+id/send"
+        app:fabSize="normal"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:ems="10"
-        android:layout_centerVertical="true"
-        android:layout_centerHorizontal="true"
-        android:id="@+id/editText" />
+        android:layout_above="@+id/mic"
+        android:layout_alignParentEnd="true"
+        android:layout_marginBottom="10dp" />
+
+
+        <TextView
+            android:layout_width="345dp"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:layout_marginLeft="5dp"
+            android:layout_marginTop="20dp"
+            android:text="SET COMMAND"
+            android:textStyle="bold"
+            android:textColor="@color/colorPrimary"
+            android:id="@+id/CommandView" />
+
+        <View
+            android:layout_width="330dp"
+            android:id="@+id/LineView"
+            android:layout_height="2dp"
+            android:background="@color/colorPrimary"
+            android:layout_below="@+id/CommandView"
+            android:layout_gravity="center_horizontal"/>
+
+        <EditText
+            android:layout_width="330dp"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/CommandView"
+            android:id="@+id/EditCommand"
+            android:hint="Write or speak command"
+            android:layout_gravity="center_horizontal" />
+
 
 </RelativeLayout>

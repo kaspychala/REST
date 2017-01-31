@@ -1,74 +1,88 @@
 package com.example.kasperspychaa.rest;
 
-import android.net.Uri;
+import android.app.Activity;
+import android.content.ActivityNotFoundException;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
+import android.speech.RecognizerIntent;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.EditText;
-import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.android.gms.appindexing.Action;
-import com.google.android.gms.appindexing.AppIndex;
-import com.google.android.gms.appindexing.Thing;
-import com.google.android.gms.common.api.GoogleApiClient;
-
-import org.springframework.http.converter.FormHttpMessageConverter;
-import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.converter.StringHttpMessageConverter;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
-import org.springframework.util.LinkedMultiValueMap;
-import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
-
-import static com.example.kasperspychaa.rest.R.id.button;
-import static com.example.kasperspychaa.rest.R.id.editText;
 
 public class MainActivity extends ActionBarActivity {
 
-    /**
-     * ATTENTION: This was auto-generated to implement the App Indexing API.
-     * See https://g.co/AppIndexing/AndroidStudio for more information.
-     */
-    private GoogleApiClient client;
     String command;
+    FloatingActionButton fab_done;
+    FloatingActionButton fab_mic;
+    EditText editText;
+    String micResult;
+    String URL="192.168.1.1:8080";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        Button button = (Button) findViewById(R.id.button);
-        final EditText editText = (EditText) findViewById(R.id.editText);
+        final Intent recIntent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
+        fab_mic = (FloatingActionButton) findViewById(R.id.mic);
+        fab_done = (FloatingActionButton) findViewById(R.id.send);
+        editText = (EditText) findViewById(R.id.EditCommand);
 
-        button.setOnClickListener(new View.OnClickListener() {
-                                      public void onClick(View v) {
-                                          new HttpPostTask().execute();
-                                          command = editText.getText().toString();
-                                      }
-                                  });
+        fab_done.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                new HttpPostTask().execute();
+                command = editText.getText().toString();
+            }
+        });
 
-        // ATTENTION: This was auto-generated to implement the App Indexing API.
-        // See https://g.co/AppIndexing/AndroidStudio for more information.
-        client = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
+        fab_mic.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                recIntent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, "en-US");
+
+                try {
+                    startActivityForResult(recIntent, 1);
+                } catch (ActivityNotFoundException a) {
+                    Toast.makeText(getApplicationContext(), "Oops! Your device doesn't support Speech to Text",Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+
     }
 
-    @Override
-    protected void onStart() {
-        super.onStart();// ATTENTION: This was auto-generated to implement the App Indexing API.
-// See https://g.co/AppIndexing/AndroidStudio for more information.
-        client.connect();
-        new HttpRequestTask().execute();
-        // ATTENTION: This was auto-generated to implement the App Indexing API.
-        // See https://g.co/AppIndexing/AndroidStudio for more information.
-        AppIndex.AppIndexApi.start(client, getIndexApiAction());
+    public void showChangeLangDialog() {
+        AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(this);
+        LayoutInflater inflater = this.getLayoutInflater();
+        final View dialogView = inflater.inflate(R.layout.custom_dialog, null);
+        dialogBuilder.setView(dialogView);
+
+        final EditText editUrl = (EditText) dialogView.findViewById(R.id.EditUrl);
+
+        dialogBuilder.setTitle("SET URL");
+        dialogBuilder.setMessage("Enter ip with port below:");
+        dialogBuilder.setPositiveButton("Done", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int whichButton) {
+                URL=editUrl.getText().toString();
+            }
+        });
+        dialogBuilder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int whichButton) {
+                //pass
+            }
+        });
+        AlertDialog b = dialogBuilder.create();
+        b.show();
     }
 
     @Override
@@ -86,72 +100,18 @@ public class MainActivity extends ActionBarActivity {
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
         if (id == R.id.action_refresh) {
-            new HttpRequestTask().execute();
+            showChangeLangDialog();
             return true;
         }
         return super.onOptionsItemSelected(item);
     }
 
-    /**
-     * ATTENTION: This was auto-generated to implement the App Indexing API.
-     * See https://g.co/AppIndexing/AndroidStudio for more information.
-     */
-    public Action getIndexApiAction() {
-        Thing object = new Thing.Builder()
-                .setName("Main Page") // TODO: Define a title for the content shown.
-                // TODO: Make sure this auto-generated URL is correct.
-                .setUrl(Uri.parse("http://[ENTER-YOUR-URL-HERE]"))
-                .build();
-        return new Action.Builder(Action.TYPE_VIEW)
-                .setObject(object)
-                .setActionStatus(Action.STATUS_TYPE_COMPLETED)
-                .build();
-    }
-
-    @Override
-    public void onStop() {
-        super.onStop();
-
-        // ATTENTION: This was auto-generated to implement the App Indexing API.
-        // See https://g.co/AppIndexing/AndroidStudio for more information.
-        AppIndex.AppIndexApi.end(client, getIndexApiAction());
-        client.disconnect();
-    }
-
-    /**
-     * A placeholder fragment containing a simple view.
-     */
-
-
-    private class HttpRequestTask extends AsyncTask<Void, Void, Greeting> {
-        @Override
-        protected Greeting doInBackground(Void... params) {
-            try {
-                final String url = "http://192.168.43.88:8080/greeting";
-                RestTemplate restTemplate = new RestTemplate();
-                restTemplate.getMessageConverters().add(new MappingJackson2HttpMessageConverter());
-                Greeting greeting = restTemplate.getForObject(url, Greeting.class);
-                return greeting;
-            } catch (Exception e) {
-                Log.e("MainActivity", e.getMessage(), e);
-            }
-
-            return null;
-        }
-
-        @Override
-        protected void onPostExecute(Greeting greeting) {
-            TextView greetingCommandText = (TextView) findViewById(R.id.content_value);
-            greetingCommandText.setText(greeting.getCommand());
-        }
-
-    }
 
     private class HttpPostTask extends AsyncTask<Void, Void, Greeting> {
         @Override
         protected Greeting doInBackground(Void... params) {
             try {
-                final String url = "http://192.168.43.88:8080/greeting";
+                final String url = "http://" + URL + "/greeting";
 
                 Greeting greeting = new Greeting();
                 greeting.setCommand(command);
@@ -174,6 +134,21 @@ public class MainActivity extends ActionBarActivity {
             Toast.makeText(MainActivity.this, "sent", Toast.LENGTH_SHORT).show();
         }
 
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        switch (requestCode) {
+            case 1: {
+                if (resultCode == Activity.RESULT_OK && null != data) {
+                    micResult = data.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS).get(0);
+                    editText.setText(micResult);
+                }
+                break;
+            }
+        }
     }
 
 }

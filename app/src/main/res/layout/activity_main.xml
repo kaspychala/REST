@@ -58,5 +58,77 @@
             android:hint="Write or speak command"
             android:layout_gravity="center_horizontal" />
 
+        <TextView
+            android:layout_width="345dp"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:layout_marginLeft="5dp"
+            android:layout_marginTop="100dp"
+            android:text="SET FILE NAME"
+            android:textStyle="bold"
+            android:textColor="@color/colorPrimary"
+            android:id="@+id/FileView" />
+
+        <View
+            android:layout_width="330dp"
+            android:id="@+id/LineView2"
+            android:layout_height="2dp"
+            android:background="@color/colorPrimary"
+            android:layout_below="@+id/FileView"
+            android:layout_gravity="center_horizontal"/>
+
+        <EditText
+            android:layout_width="330dp"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/FileView"
+            android:id="@+id/EditFile"
+            android:hint="Write or speak file name"
+            android:layout_gravity="center_horizontal" />
+
+    <Button
+        android:text="SET"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/button1"
+        android:layout_below="@+id/LineView2"
+        android:layout_alignEnd="@+id/LineView2"
+        android:layout_alignBottom="@+id/EditFile" />
+
+
+    <TextView
+        android:layout_width="345dp"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:layout_marginLeft="5dp"
+        android:layout_marginTop="180dp"
+        android:text="SET PATH"
+        android:textStyle="bold"
+        android:textColor="@color/colorPrimary"
+        android:id="@+id/PathView" />
+
+    <View
+        android:layout_width="330dp"
+        android:id="@+id/LineView3"
+        android:layout_height="2dp"
+        android:background="@color/colorPrimary"
+        android:layout_below="@+id/PathView"
+        android:layout_gravity="center_horizontal"/>
+
+    <EditText
+        android:layout_width="330dp"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/PathView"
+        android:id="@+id/EditPath"
+        android:hint="Write or speak path"
+        android:layout_gravity="center_horizontal" />
+
+    <Button
+        android:text="SET"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/button2"
+        android:layout_below="@+id/LineView3"
+        android:layout_alignEnd="@+id/LineView2"
+        android:layout_alignBottom="@+id/EditPath" />
 
 </RelativeLayout>

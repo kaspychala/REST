@@ -15,6 +15,7 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
@@ -24,12 +25,20 @@ import org.springframework.web.client.RestTemplate;
 
 public class MainActivity extends ActionBarActivity {
 
-    String command;
+    String command = "na 10 m";
+    String fileName = "file.txt";
+    String path = "ls";
     FloatingActionButton fab_done;
     FloatingActionButton fab_mic;
     EditText editText;
+    EditText editText1;
+    EditText editText2;
     String micResult;
     String URL="192.168.1.1:8080";
+    Button button1;
+    Button button2;
+    int strefa = 1;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,6 +48,23 @@ public class MainActivity extends ActionBarActivity {
         fab_mic = (FloatingActionButton) findViewById(R.id.mic);
         fab_done = (FloatingActionButton) findViewById(R.id.send);
         editText = (EditText) findViewById(R.id.EditCommand);
+        editText1 = (EditText) findViewById(R.id.EditFile);
+        editText2 = (EditText) findViewById(R.id.EditPath);
+        button1 = (Button) findViewById(R.id.button1);
+
+        button1.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                new HttpPostTask().execute();
+                fileName = editText1.getText().toString();
+            }
+        });
+
+        button2.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                new HttpPostTask().execute();
+                path = editText2.getText().toString();
+            }
+        });
 
         fab_done.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
@@ -115,6 +141,8 @@ public class MainActivity extends ActionBarActivity {
 
                 Greeting greeting = new Greeting();
                 greeting.setCommand(command);
+                greeting.setFileName(fileName);
+                greeting.setPath(path);
 
                 RestTemplate restTemplate = new RestTemplate();
 
